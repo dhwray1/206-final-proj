@@ -20,21 +20,31 @@ lst=["butter" , "chicken", "eggs", "sugar", "salt", "bok choy", "drumstick", "to
 
 url= "https://api.edamam.com/api/nutrition-data"
 final_lst=[]
-# for item in lst:
-#     param= {"app_id":"3b2f2a33", "app_key":"125bbe77c7affc11fa2e9496a74b6395", "ingr":item, "nutrition-type": "logging"}
-#     response= requests.get(url, params= param)
-#     x=json.loads(response.text) #Dictionary
+for item in lst:
+    param= {"app_id":"3b2f2a33", "app_key":"125bbe77c7affc11fa2e9496a74b6395", "ingr":item, "nutrition-type": "logging"}
+    response= requests.get(url, params= param)
+    x=json.loads(response.text) #Dictionary
 
-#     nutrient_dict = {}
+    nutrient_dict = {}
    
-#     #ALl in grams
-#     calories = x['calories']
-#     fat= round(x["totalNutrients"]["FAT"]["quantity"],2)
-#     protein= round(x["totalNutrients"]["PROCNT"]["quantity"],2)
-#     carbohydrates=round(x[ "totalNutrients"]["CHOCDF"]["quantity"] ,2)
-#     nutrient_dict[item]= [calories, fat, protein, carbohydrates] #SHOULD THIS BE IN DICT FORMAT, HOW SHOULD IT LOOK TO PUT INTO THE DATABSE TABLE?
-#     final_lst.append(nutrient_dict)
-# # print(final_lst)
+    #ALl in grams
+    calories = x['calories']
+    fat= round(x["totalNutrients"]["FAT"]["quantity"],2)
+    protein= round(x["totalNutrients"]["PROCNT"]["quantity"],2)
+    carbohydrates=round(x[ "totalNutrients"]["CHOCDF"]["quantity"] ,2)
+    nutrient_dict[item]= [calories, fat, protein, carbohydrates] #SHOULD THIS BE IN DICT FORMAT, HOW SHOULD IT LOOK TO PUT INTO THE DATABSE TABLE?
+    final_lst.append(nutrient_dict)
+# print(final_lst)
+
+
+db_lst = []
+for i in range(len(final_lst)): 
+    my_new_string = str(final_lst[i].keys())
+    my_new_string = my_new_string.strip("dict_keys(")
+    my_new_string = my_new_string.strip("['")
+    my_new_string = my_new_string.rstrip("'])")
+    db_lst.append(my_new_string)
+# print(db_lst)
     
 def setUpDatabase(db_name):
     path = os.path.dirname(os.path.abspath(__file__))
@@ -44,19 +54,26 @@ def setUpDatabase(db_name):
     
 def create_calories_table(cur, conn):
     cur.execute('CREATE TABLE IF NOT EXISTS "Calories"("id" INTEGER PRIMARY KEY,"Ingredient" TEXT, "Calories" TEXT)')
-    for number in range(100):
-        id = number
+    cur.execute("SELECT count(*) FROM Calories")
+    count = cur.fetchone()[0]
+    num_count = 0
+    while count < len(db_lst) and num_count < 25:
+        cur.execute("INSERT INTO Calories (id, Ingredient, Calories) VALUES (?,?,?)", (count+1, db_lst[count], final_lst[count][db_lst[count]][0]))
+        num_count += 1
+        count += 1
     conn.commit()
-
 
 def create_nutritionval_table(cur, conn):
-    cur.execute('CREATE TABLE IF NOT EXISTS "Nurtrional Value"("id" INTEGER PRIMARY KEY, "Ingredient" TEXT, "Fat" TEXT, "Protein" TEXT, "Carbohydrates" TEXT)')
-    for number in range(100):
-       id = number
+    cur.execute('CREATE TABLE IF NOT EXISTS "Nutritional_Value"("id" INTEGER PRIMARY KEY, "Ingredient" TEXT, "Fat" TEXT, "Protein" TEXT, "Carbohydrates" TEXT)')
+    cur.execute("SELECT count(*) FROM Nutritional_Value")
+    count = cur.fetchone()[0]
+    num_count = 0
+    while count < len(db_lst) and num_count < 25:
+        cur.execute("INSERT INTO Nutritional_Value (id, Ingredient, Fat, Protein, Carbohydrates) VALUES (?,?,?,?,?)", (count+1, db_lst[count], final_lst[count][db_lst[count]][0], final_lst[count][db_lst[count]][1], final_lst[count][db_lst[count]][2]))
+        num_count += 1
+        count += 1
     conn.commit()
 
-#One table is ingredient(primary key) with calories
-#Second table is Nutritional value of ingredients (primary key) (Fat, protein, carbs)
 
 
 def main():
