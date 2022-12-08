@@ -3,6 +3,8 @@ import json
 import unittest
 import sqlite3
 import os
+import re
+import matplotlib.pyplot as plt
 
 API_KEY = '1'
 url = "https://www.themealdb.com/api/json/v1/1/filter.php?"
@@ -25,7 +27,7 @@ for ingredient in ingredient_list:
             #print(ingredient_dict)
             db_list.append(ingredient_dict)
     #print(x)
-print(db_list)
+#print(db_list)
 long_ing_list = []
 for i in range(len(db_list)): 
     my_new_string = str(db_list[i].keys())
@@ -33,7 +35,7 @@ for i in range(len(db_list)):
     my_new_string = my_new_string.strip("['")
     my_new_string = my_new_string.rstrip("'])")
     long_ing_list.append(my_new_string)
-print(long_ing_list)
+#print(long_ing_list)
 
     # final_db_dict = {}
     # for i in range(len(db_list)):
@@ -75,8 +77,48 @@ def create_meal_table(cur, conn):
     conn.commit()
 
     # if count == 25 or count == 50 or count == 75 or count == 100:
-        
 
+def calculating_data(cur, conn):
+    get_meal1 = cur.execute('SELECT strMeal from Meals WHERE MealID = "53011"')
+    get_meal1 = cur.fetchone()
+    print(get_meal1)
+
+    get_startingid = cur.execute("SELECT * FROM Meals WHERE MealID LIKE '53%'")
+    get_startingid = cur.fetchall()
+    print(len(get_startingid))
+
+    chicken_meals = cur.execute("SELECT * FROM Meals WHERE Ingredient = 'chicken breast'")
+    chicken_meals = cur.fetchall()
+    print(len(chicken_meals))
+
+    egg_meals = cur.execute("SELECT * FROM Meals WHERE Ingredient = 'eggs'")
+    egg_meals = cur.fetchall()
+    print(len(egg_meals))
+
+    sugar_meals = cur.execute("SELECT * FROM Meals WHERE Ingredient = 'sugar'")
+    sugar_meals = cur.fetchall()
+    print(len(sugar_meals))
+
+
+def create_my_pie(): 
+    labels = ['Chicken', 'Eggs', 'Sugar']
+    sizes = [9, 62, 38]
+    colors = ['#FFC154', '#EC6B56', '#47B39C']
+    # explode = (0.1, 0, 0)
+
+    pie = plt.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', shadow=False, startangle=140, wedgeprops = {"edgecolor" : "black", 'linewidth': 2, 'antialiased': True})
+    
+    plt.axis('equal')
+
+    hatches = ['+', '/', '.']
+    # hatch_colors = ['#b57c18', '#c23b25', '#056b55']
+
+    for i in range(len(pie[0])):
+        pie[0][i].set(hatch = hatches[i], fill=True)
+
+    plt.show()
+
+"""
 # def create_eggs_table(cur, conn):
 #     # cur.execute('DROP TABLE IF EXISTS Eggs')
 #     cur.execute('CREATE TABLE IF NOT EXISTS "Meals with Eggs"("idMeal" INTEGER PRIMARY KEY, "strMeal" TEXT)')
@@ -98,6 +140,7 @@ def create_meal_table(cur, conn):
 #             cur.execute("INSERT INTO Dogs (breed, life_span, weight, height) VALUES (?,?,?,?)", (tup[0], tup[1], tup[2], tup[3]))
 #             #count+=1
 #     conn.commit()
+"""
 
 def main():
     # SETUP DATABASE AND TABLE
@@ -106,5 +149,7 @@ def main():
     create_meal_table(cur, conn)
     # create_eggs_table(cur, conn)
     # create_sugar_table(cur, conn)
+    calculating_data(cur, conn)
+    create_my_pie()
 
 main()
