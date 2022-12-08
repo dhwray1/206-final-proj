@@ -71,14 +71,27 @@ def setUpDatabase(db_name):
 
 
 def create_wine_table(cur, conn):
-    cur.execute('CREATE TABLE IF NOT EXISTS "Wines"("id" INTEGER PRIMARY KEY,"Wine" TEXT, "Meal" TEXT)')
+    cur.execute('CREATE TABLE IF NOT EXISTS "Wines"("id" INTEGER PRIMARY KEY,"Wine" TEXT)')
+    cur.execute('CREATE TABLE IF NOT EXISTS "Serving"("id" INTEGER PRIMARY KEY,"Wine_id" INTEGER, "Meal" TEXT)')
+
     cur.execute("SELECT count(*) FROM Wines")
     count = cur.fetchone()[0]
     num_count = 0
+
+
+    cur.execute("SELECT count(*) FROM Serving")
+    serving_id = cur.fetchone()[0]
+
     while count < len(winedb_lst) and num_count < 25:
-        cur.execute("INSERT INTO Wines (id, Wine, Meal) VALUES (?,?,?)", (count+1, winedb_lst[count], lst[count][winedb_lst[count]][0]))
+        cur.execute("INSERT INTO Wines (id, Wine) VALUES (?,?)", (count+1, winedb_lst[count]))
+        for meal in lst[count][winedb_lst[count]]:
+            if meal == '0':
+                break
+            cur.execute("INSERT INTO Serving (id, Wine_id, Meal) VALUES (?,?,?)", (serving_id+1, count+1, meal))
+            serving_id += 1
         num_count += 1
         count += 1
+        
     conn.commit()
 
 def main():
