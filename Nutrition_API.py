@@ -108,7 +108,11 @@ def calculating_data(cur, conn):
 
     # Carbohydrates provide 4 calories per gram, protein provides 4 calories per gram, and fat provides 9 calories per gram.
     total_calories= (chicken_fat_num*9)+(chicken_prot_num*4)+ (chicken_carbs_num*4)
-    print("The total calories for an expected serving size of chicken is " + str(total_calories))
+    #print("The total calories for an expected serving size of chicken is " + str(total_calories))
+
+    my_file = open("calculations.txt", "w")
+    my_file.write("The total calories for an expected serving size of chicken is " + str(total_calories))
+    my_file.close()
 
 
 

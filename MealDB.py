@@ -91,19 +91,28 @@ def calculating_data(cur, conn):
     chicken_meals = cur.fetchall()
     print("The number of meals in our database made out of chicken is ", len(chicken_meals))
     chicken_percent = ((len(chicken_meals)/len(db_list))*100)
-    print("The percentage of meals made out of chicken in our database is ", chicken_percent, "%")
+    chicken_string = "The percentage of meals made out of chicken in our database is " + str(chicken_percent) + "%"
+    print(chicken_string)
 
     egg_meals = cur.execute("SELECT * FROM Meals WHERE Ingredient = 'eggs'")
     egg_meals = cur.fetchall()
     print("The number of meals in our database made out of eggs is ",len(egg_meals))
     egg_percent = ((len(egg_meals)/len(db_list))*100)
-    print("The percentage of meals made out of eggs in our database is ", egg_percent, "%")
+    egg_string = "The percentage of meals made out of eggs in our database is " + str(egg_percent) + "%"
+    print(egg_string)
 
     sugar_meals = cur.execute("SELECT * FROM Meals WHERE Ingredient = 'sugar'")
     sugar_meals = cur.fetchall()
     print("The number of meals in our database made out of sugar is ", len(sugar_meals))
-    chicken_percent = ((len(sugar_meals)/len(db_list))*100)
-    print("The percentage of meals made out of chicken in our database is ", chicken_percent, "%")
+    sugar_percent = ((len(sugar_meals)/len(db_list))*100)
+    sugar_string = "The percentage of meals made out of sugar in our database is " + str(chicken_percent) + "%"
+    print(sugar_string)
+
+    my_file = open("calculations.txt", "w")
+    my_file.write(chicken_string)
+    my_file.write(egg_string)
+    my_file.write(sugar_string)
+    my_file.close()
 
 def create_my_pie(): 
     labels = ['Chicken', 'Eggs', 'Sugar']
