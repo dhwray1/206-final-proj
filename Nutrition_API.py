@@ -28,11 +28,11 @@ for item in lst:
     nutrient_dict = {}
    
     #ALl in grams
-    calories = x['calories']
+    # calories = x['calories']
     fat= round(x["totalNutrients"]["FAT"]["quantity"],2)
     protein= round(x["totalNutrients"]["PROCNT"]["quantity"],2)
     carbohydrates=round(x[ "totalNutrients"]["CHOCDF"]["quantity"] ,2)
-    nutrient_dict[item]= [calories, fat, protein, carbohydrates] #SHOULD THIS BE IN DICT FORMAT, HOW SHOULD IT LOOK TO PUT INTO THE DATABSE TABLE?
+    nutrient_dict[item]= [fat, protein, carbohydrates] #SHOULD THIS BE IN DICT FORMAT, HOW SHOULD IT LOOK TO PUT INTO THE DATABSE TABLE?
     final_lst.append(nutrient_dict)
 # print(final_lst)
 
@@ -52,24 +52,36 @@ def setUpDatabase(db_name):
     cur = conn.cursor()
     return cur, conn
     
-def create_calories_table(cur, conn):
-    cur.execute('CREATE TABLE IF NOT EXISTS "Calories"("id" INTEGER PRIMARY KEY,"Ingredient" TEXT, "Calories" TEXT)')
-    cur.execute("SELECT count(*) FROM Calories")
+def create_fat_table(cur, conn):
+    cur.execute('CREATE TABLE IF NOT EXISTS "Fat"("id" INTEGER PRIMARY KEY,"Ingredient" TEXT, "Fat" TEXT)')
+    cur.execute("SELECT count(*) FROM Fat")
     count = cur.fetchone()[0]
     num_count = 0
     while count < len(db_lst) and num_count < 25:
-        cur.execute("INSERT INTO Calories (id, Ingredient, Calories) VALUES (?,?,?)", (count+1, db_lst[count], final_lst[count][db_lst[count]][0]))
+        cur.execute("INSERT INTO Fat (id, Ingredient, Fat) VALUES (?,?,?)", (count+1, db_lst[count], final_lst[count][db_lst[count]][0]))
         num_count += 1
         count += 1
     conn.commit()
 
-def create_nutritionval_table(cur, conn):
-    cur.execute('CREATE TABLE IF NOT EXISTS "Nutritional_Value"("id" INTEGER PRIMARY KEY, "Ingredient" TEXT, "Fat" TEXT, "Protein" TEXT, "Carbohydrates" TEXT)')
-    cur.execute("SELECT count(*) FROM Nutritional_Value")
+def create_protein_table(cur, conn):
+    cur.execute('CREATE TABLE IF NOT EXISTS "Protein"("id" INTEGER PRIMARY KEY,"Ingredient" TEXT, "Protein" TEXT)')
+    cur.execute("SELECT count(*) FROM Protein")
     count = cur.fetchone()[0]
     num_count = 0
     while count < len(db_lst) and num_count < 25:
-        cur.execute("INSERT INTO Nutritional_Value (id, Ingredient, Fat, Protein, Carbohydrates) VALUES (?,?,?,?,?)", (count+1, db_lst[count], final_lst[count][db_lst[count]][0], final_lst[count][db_lst[count]][1], final_lst[count][db_lst[count]][2]))
+        cur.execute("INSERT INTO Protein (id, Ingredient, Protein) VALUES (?,?,?)", (count+1, db_lst[count], final_lst[count][db_lst[count]][1]))
+        num_count += 1
+        count += 1
+    conn.commit()    
+    
+
+def create_carb_table(cur, conn):
+    cur.execute('CREATE TABLE IF NOT EXISTS "Carbohydrates"("id" INTEGER PRIMARY KEY, "Ingredient" TEXT, "Carbohydrates" TEXT)')
+    cur.execute("SELECT count(*) FROM Carbohydrates")
+    count = cur.fetchone()[0]
+    num_count = 0
+    while count < len(db_lst) and num_count < 25:
+        cur.execute("INSERT INTO Carbohydrates (id, Ingredient, Carbohydrates) VALUES (?,?,?)", (count+1, db_lst[count], final_lst[count][db_lst[count]][2]))
         num_count += 1
         count += 1
     conn.commit()
@@ -79,8 +91,9 @@ def create_nutritionval_table(cur, conn):
 def main():
     # SETUP DATABASE AND TABLE
     cur, conn = setUpDatabase('meals.db')
-    create_calories_table(cur, conn)
-    create_nutritionval_table(cur, conn)
+    create_fat_table(cur, conn)
+    create_protein_table(cur, conn)
+    create_carb_table(cur, conn)
 
 
 main()
