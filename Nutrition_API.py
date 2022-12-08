@@ -4,8 +4,8 @@ import unittest
 import sqlite3
 import os
 # import plotly.graph_objects as go
-# import numpy as np
-# import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.pyplot as plt
 
 lst=["butter" , "chicken", "eggs", "sugar", "salt", "bok choy", "drumstick", "tomato", "lemon", "potato",
  "spinach", "onion", "mushroom", "radish", "chives", "coriander", "paprika", "red chili", "saffron", "beef", "turkey", "salmon",
@@ -112,20 +112,36 @@ def calculating_data(cur, conn):
 
 
 
-# def create_my_bargraph(): 
+def create_chicken_bargraph(): 
 #     # fig= go.FigureWidget(data=go.Bar( x=["Fat (in grams)", "Protein (in grams)", "Carbohydrates (in grams)"],  y=[22.22, 27.67, 13.42], color=['#58508d', '#bc5090', '#ff6361']))
 #     # # path=os.path.dirname(os.path.abspath(__file__))
 #     # # fig.write_image(os.path.join(path,'bar1.png'))
 #     # fig.show()
-#     height=[22.22, 27.67, 13.42]
-#     bars=["Fat (in grams)", "Protein (in grams)", "Carbohydrates (in grams)"]
-#     x_pos= np.arange(len(bars))
-#     plt.bar(x_pos, height, color=['#58508d', '#bc5090', '#ff6361'])
-#     plt.xticks(x_pos, bars)
-#     plt.show()
+    height=[22.22, 27.67, 13.42]
+    bars=["Fat (in grams)", "Protein (in grams)", "Carbohydrates (in grams)"]
+    x_pos= np.arange(len(bars))
+    plt.bar(x_pos, height, color=['#58508d', '#bc5090', '#ff6361'], edgecolor = "black", hatch=['/', '.', '*'])
+    plt.xticks(x_pos, bars)
+    plt.title("Nutritional values in Chicken")
+    plt.show()
 
-    
+def create_eggs_bargraph():
+    height=[5.3, 6.29, 0.56]
+    bars=["Fat (in grams)", "Protein (in grams)", "Carbohydrates (in grams)"]
+    x_pos= np.arange(len(bars))
+    plt.bar(x_pos, height, color=['#bde3cb', '#4dbcd4', '#1b237e'], edgecolor = "black", hatch=['/', '-', '*'])
+    plt.xticks(x_pos, bars)
+    plt.title("Nutritional values in Eggs")
+    plt.show()
 
+def create_spinach_bargraph():
+    height=[0.39, 2.86, 3.63]
+    bars=["Fat (in grams)", "Protein (in grams)", "Carbohydrates (in grams)"]
+    x_pos= np.arange(len(bars))
+    plt.bar(x_pos, height, color=['#ffee65', '#7eb0d5', '#fd7f6f'], edgecolor = "black", hatch=['//', '*', 'O'])
+    plt.xticks(x_pos, bars)
+    plt.title("Nutritional values in Spinach")
+    plt.show()
 
 def main():
     # SETUP DATABASE AND TABLE
@@ -134,7 +150,9 @@ def main():
     create_protein_table(cur, conn)
     create_carb_table(cur, conn)
     calculating_data(cur, conn)
-    # create_my_bargraph()
+    create_chicken_bargraph()
+    create_eggs_bargraph()
+    create_spinach_bargraph()
 
 
 main()
