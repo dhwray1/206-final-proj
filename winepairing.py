@@ -94,6 +94,10 @@ def create_wine_table(cur, conn):
         
     conn.commit()
 
+def calculate_data(cur, conn):
+    cur.execute("SELECT s.MEAL FROM Serving s JOIN WINES w ON w.id = s.Wine_id WHERE w.Wine = 'white_wine'")
+    
+
 def main():
     # SETUP DATABASE AND TABLE
     cur, conn = setUpDatabase('meals.db')
