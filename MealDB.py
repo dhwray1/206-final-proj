@@ -121,6 +121,8 @@ def create_my_pie():
     for i in range(len(pie[0])):
         pie[0][i].set(hatch = hatches[i], fill=True)
 
+    plt.title("Percentage of Chicken meals, egg meals and sugar meals in our database")
+
     plt.show()
 
 """
