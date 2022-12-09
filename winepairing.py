@@ -96,13 +96,28 @@ def create_wine_table(cur, conn):
 
 def calculate_data(cur, conn):
     cur.execute("SELECT s.MEAL FROM Serving s JOIN WINES w ON w.id = s.Wine_id WHERE w.Wine = 'white_wine'")
-    
+    (cur.execute("Select count(*) FROM Serving"))
+    total_wine_number=(cur.fetchone())
+    # print(total_wine_number)
+    (cur. execute("SELECT count(s.id) FROM Serving s JOIN Wines w on s.Wine_id= w.id WHERE w.Wine='white_wine'" ))
+    white_wine_number=(cur.fetchone())
+    frequency= (white_wine_number[0]/total_wine_number[0])*100
+    file=open("my_file.txt", "a")
+    file.write("The meals that are best paired with white wines which was found using join tables are pho, fish, crab, stew, and carp." + "\n"
+    "White whine pairings consists of " + str(round(frequency,2)) + " percentage of all wine and meal pairings in the database." + "\n")
+    file.close()
+
+
+
+
+# def calculations(cur, conn):
 
 def main():
     # SETUP DATABASE AND TABLE
     cur, conn = setUpDatabase('meals.db')
     #create_db_list()
     create_wine_table(cur, conn)
+    calculate_data(cur, conn)
     # create_eggs_table(cur, conn)
     # create_sugar_table(cur, conn)
 

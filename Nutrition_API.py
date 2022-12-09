@@ -110,8 +110,8 @@ def calculating_data(cur, conn):
     total_calories= (chicken_fat_num*9)+(chicken_prot_num*4)+ (chicken_carbs_num*4)
     #print("The total calories for an expected serving size of chicken is " + str(total_calories))
 
-    my_file = open("calculations.txt", "w")
-    my_file.write("The total calories for an expected serving size of chicken is " + str(total_calories))
+    my_file = open("my_file.txt", "a")
+    my_file.write("The total calories for an expected serving size of chicken is " + str(total_calories)+"\n")
     my_file.close()
 
 
@@ -147,15 +147,6 @@ def create_spinach_bargraph():
     plt.title("Nutritional values in Spinach")
     plt.show()
 
-def create_mushroom_bargraph():
-    height=[15.3, 11.85, 17.8]
-    bars=["Fat (in grams)", "Protein (in grams)", "Carbohydrates (in grams)"]
-    x_pos= np.arange(len(bars))
-    plt.bar(x_pos, height, color=['#e27c7c', '#6d4b4b', '#6cd4c5'], edgecolor = "black", hatch=['//', 'o', '-'])
-    plt.xticks(x_pos, bars)
-    plt.title("Nutritional values in Mushroom")
-    plt.show()
-
 def main():
     # SETUP DATABASE AND TABLE
     cur, conn = setUpDatabase('meals.db')
@@ -166,17 +157,11 @@ def main():
     create_chicken_bargraph()
     create_eggs_bargraph()
     create_spinach_bargraph()
-    create_mushroom_bargraph()
 
 
 main()
 
            
-#Part 3
-#select into all databases to get some numbers and perform calc
-#Doesn't have to be one big seelct statmenet. differnt statements to access different data from each tables.
-
-
 
 
 
