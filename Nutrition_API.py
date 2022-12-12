@@ -24,7 +24,7 @@ lst=["butter" , "chicken", "eggs", "sugar", "salt", "bok choy", "drumstick", "to
 url= "https://api.edamam.com/api/nutrition-data"
 final_lst=[]
 for item in lst:
-    param= {"app_id":"74681b40", "app_key":"3fc0acaaa7ef5d7154f435185594e712", "ingr":item, "nutrition-type": "logging"}
+    param= {"app_id":"5c07f6c6", "app_key":"fd58c32b8eb154a2fddc1c5839c88179", "ingr":item, "nutrition-type": "logging"}
     response= requests.get(url, params= param)
     x=json.loads(response.text) #Dictionary
 
